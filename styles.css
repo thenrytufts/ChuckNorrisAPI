@@ -1,0 +1,25 @@
+body {
+	background: url(chuck-norris.jpg) no-repeat center center fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	background-blend-mode: cover;
+	color: red;
+}
+
+button {
+	width: 10vw;
+	height: 5vw;
+	font-size: 20px;
+}
+
+#score {
+	font-size: 3vw;
+}
+
+footer {
+	position: fixed;
+	bottom: 0;
+	font-weight: bold;
+}

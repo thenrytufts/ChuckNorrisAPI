@@ -1,0 +1,96 @@
+<html>
+<head>
+<title>Chuck Norris</title>
+<link rel="stylesheet" href="styles.css">
+<style type="text/css"></style>
+	<script>
+		var goodJokes = 0;
+		var badJokes = 0;
+		var gameOver = false; 
+
+		function loadJoke() {
+			if (!gameOver) {
+				request = new XMLHttpRequest();
+				console.log("request created");
+
+				request.open("GET", "http://api.icndb.com/jokes/random?exclude=[explicit]", true);
+				
+				console.log("open req file");
+
+				request.onreadystatechange = function() {
+					console.log("onreadystatechange");
+
+					if (request.readyState == 4 && request.status == 200) {
+						console.log("ALL READY");
+						result = request.responseText;
+						joke = JSON.parse(result);
+						setJokeHTML(joke);
+					}
+					else if (request.readyState == 4 && request.status != 200) {
+						console.log("something is wrong");
+					}
+					else if (request.readyState == 3) {
+						console.log("too soon");
+					}
+				}
+
+				request.send();
+				console.log("request sent");
+			}
+		}
+
+		function directions() {
+			document.getElementById("joke").innerHTML = "<p>Your chance to settle the dispute, are Chuck Norris Jokes actually funny? Vote yes or no, first to 5 wins! </p>";
+			window.setTimeout(displayScore, 5000);		
+		}
+
+		function setJokeHTML(new_joke) {
+			console.log(new_joke);
+			jokeHTML = "<p>" + new_joke.value.joke + "</p>";
+			document.getElementById("joke").innerHTML = jokeHTML;
+		}
+
+		function displayScore(number) {
+			if (!gameOver) {
+				if (number == 1) {
+					goodJokes++;
+				}
+				else if (number == 0) {
+					badJokes++;
+				}
+
+				document.getElementById("score").innerHTML = "Funny: " + goodJokes + " Not funny: " + badJokes;
+				if (goodJokes >= 5) {
+					document.getElementById("joke").innerHTML = "<p>It is settled! Chuck Norris jokes are funny, thanks for playing!</p>";
+					gameOver = true;
+				}
+				else if (badJokes >= 5) {
+					document.getElementById("joke").innerHTML = "<p>Sorry Chuck, your jokes are not funny! Thanks for solving this mystery.</p>";
+					gameOver = true;
+				}
+				// game not over
+				else {
+					loadJoke();
+				}
+			}
+		}
+
+	</script>
+</head>
+<body onLoad="directions()">
+	<div class="container">
+		<h1>Are Chuck Norris Jokes Funny?</p>
+		<div id="joke"></div>
+		<button type='button' onclick="displayScore(1)">Funny</button>
+		<button type='button' onclick="displayScore(0)">Not Funny</button>
+	</div>
+	<div id="score"></div>
+	<footer>
+		<p>The Internet Chuck Norris Database holds a database of Chuck Norris jokes. I selected the random joke generator. Results are in the form of raw JSON.
+		</p>
+		<p>http://www.icndb.com/api/</p>
+		<p>I used the single random joke option. I specified in my request that I only wanted to one random joke, since it worked best for the game I chose to create! I also filtered my request based on category, choosing to exclude explicit jokes.</p>
+		<p>This API is helpful if you want to curate a list of funny jokes. You could create a list of jokes and create a selection in which people chose the funny jokes. Another application would be creating a list of jokes from a certain category. If people only want to see a certain category of joke, they can specify that in the API. It is a good way to test someones sense of humor.</p> 
+	</footer>
+</body>
+</html>
